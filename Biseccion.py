@@ -19,6 +19,10 @@ def obtener_error_maximo():
     es = float(input("Error maximo\n"))
     return es
 
+def obtener_error_maximo_fp():
+    es1 = float(input("Error maximo2\n"))
+    return es1
+
 def bisec(f, a, b, es):
     xl = a
     xu = b
@@ -65,7 +69,56 @@ def bisec(f, a, b, es):
         bisec_table.append([count, xl, fxl, pm, fpm, xu, fxu, ea])
         
     print("\nMétodo de la Bisección:")
-    print(tabulate(bisec_table, headers="firstrow", tablefmt="fancy_grid"))
+    print(tabulate(bisec_table, headers="firstrow", tablefmt="fancy_grid"))# Metodo de falsa posicion
+    
+def falsa_posicion(f, a, b, es1):
+    xl1 = a
+    xu1 = b
+    xr = xu1 - (f(xu1) * (xl1 - xu1)) / (f(xl1) - f(xu1))
+    xrv = []
+    ea = 2 * es1
+    eav = []
+    count = 0
+    countV = []
+    xl1V = []
+    xu1V = []
+    falp_table = []
+    
+    fxl1 = f(xl1)
+    fxu1 = f(xu1)
+    fxr = f(xr)
+    xl1V.append(fxl1)
+    xu1V.append(fxu1)
+        
+    falp_table.append(["I", "xl", "f(xl)", "xu", "f(xu)", "xr", "f(xr)", "error"])
+    
+    while ea >= es1:
+        xrv.append(xu1)
+        count += 1
+        countV.append(count)
+        if fxl1 * fxr > 0:
+            xl1 = xr
+        elif fxl1 * fxr < 0:
+            xu1 = xr
+        else:
+            ea = 0
+        xrOld = xrv[-1]
+        xr = xu1 - (f(xu1) * (xl1 - xu1)) / (f(xl1) - f(xu1))
+
+        if xr != 0:
+            ea = abs((xu1 - xrOld) / xu1) * 100
+            eav.append(ea)
+
+        fxl1 = f(xl1)
+        fxu1 = f(xu1)
+        fxr = f(xr)
+        xl1V.append(fxl1)
+        xu1V.append(fxu1)
+        falp_table.append([count, xl1, fxl1, xu1, fxu1, xr, fxr, ea])
+        
+    print("\nMétodo de la Falsa Posición:")
+    print(tabulate(falp_table, headers="firstrow", tablefmt="fancy_grid"))
+
     
     # Imprimir los puntos de la función utilizados para graficar
     puntos_funcion = []
@@ -128,6 +181,8 @@ f = obtener_funcion()
 a, b = obtener_puntos()
 x = obtener_punto()
 emax = obtener_error_maximo()
+emaxi = obtener_error_maximo_fp()
 
 bisec(f, a, b, emax)
 pendiente(f, x, emax)
+falsa_posicion(f, a, b, emaxi)
