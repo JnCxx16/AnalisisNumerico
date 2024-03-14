@@ -1,10 +1,20 @@
+import sympy as sp
 import numpy as np
 import matplotlib.pyplot as plt
 from tabulate import tabulate
 
 def obtener_funcion():
     fn = input("Ingrese su funcion\n")
-    return lambda x: eval(fn)
+    x = sp.symbols('x')
+    try:
+        expr = sp.sympify(fn)
+        grado = sp.degree(expr)
+        if grado != 2:
+            raise ValueError("No se puede hacer ese metodo")
+        return sp.lambdify(x, expr, 'numpy')
+    except (sp.SympifyError, ValueError) as e:
+        print("Esta no es una funcion cuadratica.", e)
+        return obtener_funcion()
 
 def obtener_puntos():
     a = float(input("Punto inicial\n"))
